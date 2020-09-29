@@ -23,7 +23,7 @@ def GetArgs():
     parser.add_argument('--folders', metavar='+', type=str, nargs='+', help='One or more folder to recursively check all .py files.')
     parser.add_argument('--files', metavar='+', type=str, help='One or more .py files to check.')
     parser.add_argument('--recursive', action='store_true', help='Put if want to recursively search sub folders in folders.')
-    parser.add_argument('--aggregate', action='store_true', help='Include if just want all unique libraries listed, not grouped by file and/or folder.')
+    parser.add_argument('--aggregate', action='store_true', help='Include if just want all unique libraries listed, not grouped by file where they occur.')
     result = parser.parse_args()
     
     return result.outfolder, result.folders, result.files, result.aggregate, result.recursive
