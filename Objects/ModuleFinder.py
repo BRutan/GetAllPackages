@@ -5,6 +5,7 @@
 # * Gets all modules used in a .py file.
 
 import re
+#from modulefinder import ModuleFinder
 
 class ModuleFinder:
     __signatures = [re.compile('import (.+)\n'), re.compile('from (.+) import .+\n')]
@@ -27,4 +28,16 @@ class ModuleFinder:
                         modules.add(module)
                         break
         return modules
+
+#class ModuleGetter:
+#    __finder = ModuleFinder()
+#    @classmethod
+#    def GetModules(cls, file):
+#        """
+#        * Get all modules used in file.
+#        """
+#        ModuleGetter.__finder.run_script(file)
+#        modules = set([])
+
+#        return modules
 

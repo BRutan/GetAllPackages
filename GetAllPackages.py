@@ -6,11 +6,11 @@
 # in collection of .py files.
 
 from argparse import ArgumentParser
-from Objects.ModuleFinder import ModuleFinder
+from Objects.ModuleFinder import _ModuleFinder, ModuleGetter
 import os
 
 def Main():
-    outfolder, folders, files, aggregate, recursive = GetArgs()
+    outfolder, folders, files, aggregate, recursive, skipstd = GetArgs()
     outfolder, files, folders = CheckArgs(outfolder, folders, files)
     fileModules = CheckAllFiles(files, aggregate)
     folderModules = CheckAllFolders(folders, aggregate, recursive)
@@ -24,9 +24,10 @@ def GetArgs():
     parser.add_argument('--files', metavar='+', type=str, help='One or more .py files to check.')
     parser.add_argument('--recursive', action='store_true', help='Put if want to recursively search sub folders in folders.')
     parser.add_argument('--aggregate', action='store_true', help='Include if just want all unique libraries listed, not grouped by file where they occur.')
+    parser.add_argument('--skipstandardlib', action='store_true', help="Include if don't want to include standard modules in output.")
     result = parser.parse_args()
     
-    return result.outfolder, result.folders, result.files, result.aggregate, result.recursive
+    return result.outfolder, result.folders, result.files, result.aggregate, result.recursive, result.skipstandardlib
 
 def CheckArgs(outfolder, folders, files):
     """

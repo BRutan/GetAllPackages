@@ -11,8 +11,8 @@
     <OutputPath>.</OutputPath>
     <Name>GetAllPackages</Name>
     <RootNamespace>GetAllPackages</RootNamespace>
-    <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>./ --file C:\Users\rutan\OneDrive\Desktop\Repos\Python\DynamicETLDashboard\setup.py --folder C:\Users\rutan\OneDrive\Desktop\Repos\Python\DynamicETLDashboard\DynamicETLDashboard --recursive</CommandLineArguments>
+    <LaunchProvider>Django launcher</LaunchProvider>
+    <CommandLineArguments>./ --folder C:\Users\rutan\OneDrive\Desktop\Repos\Python\SeminarProject\SeminarProject\SeminarProject --recursive --aggregate</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
