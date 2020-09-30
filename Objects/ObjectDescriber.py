@@ -6,6 +6,7 @@
 
 import inspect 
 import pandas
+import re
 
 class ObjectDescriber:
     """
@@ -13,6 +14,8 @@ class ObjectDescriber:
     """
     __typeFuncs = {'Module' : lambda x : inspect.ismodule(x), 'Class' : lambda x : inspect.isclass(x), 
                    'Method' : lambda x : inspect.ismethod(x), 'Function' : lambda x : inspect.isfunction(x) }
+    __containerTypes = (list, dict, set)
+    __classPattern = re.compile("<class '(.+)'>")
     @classmethod
     def GetMembers(cls, objects):
         """
@@ -20,19 +23,24 @@ class ObjectDescriber:
         """
         members = { 'Type' : [], 'Members' : [] }
         types = set([])
-        if not hasattr(objects, '__iter__') or isinstance(objects, str):
+        if not isinstance(objects, ObjectDescriber.__containerTypes):
             objects = [objects]
         for obj in objects:
             if type(obj) not in types:
                 types.add(type(obj))
             else:
                 continue
-            membs = inspect.getmembers(obj)
             members['Type'].append(str(type(obj)))
-            if not inspect.isclass(obj):
+            # Attempt to get members if supported:
+            try:
+                membs = inspect.getmembers(obj)
+                if not inspect.isclass(obj):
+                    members['Members'].append('')
+                else:
+                    members['Members'].append('{%s}' % ','.join([mem[0] for mem in membs]))
+            except:
                 members['Members'].append('')
-            else:
-                members['Members'].append('{%s}' % ','.join([mem[0] for mem in membs]))
+            
         return members
 
     @classmethod
@@ -43,8 +51,8 @@ class ObjectDescriber:
         """
         docs = { 'Type' : [] ,'Documentation' : [] }
         types = set([])
-        if hasattr(objects, '__iter__') and not isinstance(objects, str):
-            objects = set(objects)
+        if not isinstance(objects, ObjectDescriber.__containerTypes):
+            objects = [objects]
         for obj in objects:
             if not type(obj) in types:
                 types.add(type(obj))
@@ -62,7 +70,7 @@ class ObjectDescriber:
         """
         mods = { 'Type' : [], 'Module' : [] }
         types = set([])
-        if not hasattr(objects, '__iter__') or isinstance(objects, str):
+        if not isinstance(objects, ObjectDescriber.__containerTypes):
             objects = [objects]
         for obj in objects:
             if not type(obj) in types:
@@ -80,15 +88,18 @@ class ObjectDescriber:
         of one or more objects.
         """
         types = set([])
-        if not hasattr(objects, '__iter__') or isinstance(objects, str):
+        if not isinstance(objects, ObjectDescriber.__containerTypes):
             objects = [objects]
         toTest = []
         for obj in objects:
             if type(obj) not in types:
                 types.add(type(obj))
                 toTest.append(obj)
-        funcs = [getattr(cls, f) for f in dir(cls) if not f.startswith('_')]
-        keyAttrs = { 'Type' : [str(tp) for tp in types] }
+        funcs = [getattr(cls, f) for f in dir(cls) if not f.startswith('_') and not f == 'GetKeyAttributes']
+        keyAttrs = { 'Type' : [] }
+        for tp in types:
+            match = ObjectDescriber.__classPattern.search(str(tp))
+            keyAttrs['Type'].append(match[0])
         for f in funcs:
             result = f(toTest)
             keyAttrs.update({key : result[key] for key in result if key != 'Type'})
