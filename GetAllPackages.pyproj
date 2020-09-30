@@ -28,6 +28,9 @@
     <Compile Include="Objects\ModuleFinder.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Objects\ObjectDescriber.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Objects\__init__.py">
       <SubType>Code</SubType>
     </Compile>
